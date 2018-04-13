@@ -12,16 +12,18 @@ apply plugin: 'docker'
 repositories {
     mavenCentral()
 }
-
-task buildNPM() {
+task copyOthers(){
     copy {
         from '.'
         into 'build/docker'
         exclude 'build'
     }
 }
+task copyToBuild(type: Exec,dependsOn: copyOthers) {
+    commandLine 'sh', '-c', 'cp conf/$ENV.cfg build/docker/haproxy.cfg'
+}
 
-task buildDocker(type: Docker,dependsOn: buildNPM) {
+task buildDocker(type: Docker,dependsOn: copyToBuild) {
     push = false
     applicationName="unifiedapi"
     tagVersion="DEV"
