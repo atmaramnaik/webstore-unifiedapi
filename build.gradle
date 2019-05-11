@@ -6,7 +6,7 @@ buildscript {
         classpath('se.transmode.gradle:gradle-docker:1.2')
     }
 }
-group = "webstore"
+group = "atmaram"
 apply plugin: 'idea'
 apply plugin: 'docker'
 repositories {
@@ -25,8 +25,15 @@ task copyToBuild(type: Exec,dependsOn: copyOthers) {
 
 task buildDocker(type: Docker,dependsOn: copyToBuild) {
     push = false
-    applicationName="unifiedapi"
-    tagVersion="DEV"
+    applicationName="webstore-unifiedapi"
+    tagVersion="v0.0.1"
+    tag="${project.group}/${applicationName}"
+    dockerfile = file('Dockerfile')
+}
+task buildAndPushDocker(type: Docker,dependsOn: copyToBuild) {
+    push = true
+    applicationName="webstore-unifiedapi"
+    tagVersion="v0.0.1"
     tag="${project.group}/${applicationName}"
     dockerfile = file('Dockerfile')
 }
